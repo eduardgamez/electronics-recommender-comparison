@@ -12,20 +12,21 @@
 ## Organización del Proyecto
 * `dataset/`: Contiene el notebook de descarga, exploración y limpieza (`process_data.ipynb`) y las particiones de datos resultantes (`train.csv`, `val.csv`, `test.csv`).
 * `scripts/`: El núcleo del motor.
-  * `functions.py`: Implementación de las clases de los 4 modelos (KNN, PMF, BeMF, NCF) y lógica de entrenamiento.
+  * `c_recomendadores.py`: Implementación de la arquitectura abstracta y clases de los 4 modelos (KNN, PMF, BeMF, NCF).
+  * `f_evaluacion.py`: Módulo global con las métricas de evaluación multidimensional (RMSE, MAE, Precisión, Recall, nDCG).
   * `tuning_knn.ipynb`: Optimización de $k$ vecinos y métricas de similitud (Pearson/JMSD).
   * `tuning_pmf.ipynb`: Ajuste de factores latentes y regularización $\lambda$.
   * `tuning_bemf.ipynb`: Modelado de distribuciones de Bernoulli y fiabilidad.
   * `tuning_ncf.ipynb`: Entrenamiento de redes profundas (GMF/MLP) en PyTorch.
+  * `final_comparison.ipynb`: Notebook de ejecución final que contrasta el rendimiento de los mejores candidatos de cada técnica.
 * `models/`: Almacén de subproductos, como pesos de redes neuronales y matrices de factores entrenadas.
-* `comparison/`: `final_comparison.ipynb`. Notebook de ejecución final que contrasta el rendimiento de los mejores candidatos de cada técnica.
 
 ## Flujo de Ejecución (Pipeline)
 Para garantizar la máxima precisión en un entorno de alta dimensionalidad, el sistema sigue tres fases:
 
 1.  **Refinado de Datos**: Se filtran usuarios e ítems con baja actividad para reducir la dispersión de la matriz de votaciones, generando particiones consistentes para validación cruzada. Se puede ejecutar el notebook de procesamiento `dataset/process_data.ipynb` para generar los archivos CSV limpios.
 2.  **Ajuste de Hiperparámetros (Tuning)**: Cada notebook en `scripts/` ejecuta una búsqueda para encontrar el equilibrio entre sesgo y varianza. Se optimizan parámetros críticos como el número de factores latentes o el *learning rate*.
-3.  **Evaluación Multidimensional**: Los modelos se enfrentan en la carpeta `comparison/`. No solo se busca minimizar el $RMSE$, sino maximizar el **nDCG**, asegurando que los productos preferidos por el usuario aparezcan en las primeras posiciones de la lista.
+3.  **Evaluación Multidimensional**: Los modelos se enfrentan en el script `scripts/final_comparison.ipynb`. No solo se busca minimizar el $RMSE$, sino maximizar el **nDCG**, asegurando que los productos preferidos por el usuario aparezcan en las primeras posiciones de la lista.
 
 ## Conclusión: 
 ...
@@ -35,6 +36,7 @@ Escribe estos comandos uno a uno en la terminal de tu editor para instalar las d
 
 **Mac / Linux:**
 ```bash
+cd electronics-recommender-comparison
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
@@ -42,6 +44,7 @@ pip install -r requirements.txt
 
 **Windows:**
 ```bash
+cd electronics-recommender-comparison
 python -m venv venv
 venv\Scripts\activate
 pip install -r requirements.txt
